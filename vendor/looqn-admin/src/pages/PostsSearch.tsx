@@ -14,16 +14,18 @@ import { type FormEvent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { db } from '../firebase'
 import type { PostRecord } from '../types'
+import { decryptText, decryptUserId } from '../utils/crypto'
 import { formatTimestamp } from '../utils/format'
 
-const mapPost = (
+const mapPost = async (
   docSnap: QueryDocumentSnapshot<DocumentData> | DocumentSnapshot<DocumentData>,
-): PostRecord => {
+): Promise<PostRecord> => {
   const data = docSnap.data()
   if (!data) {
     return { id: docSnap.id }
   }
-  const userId =
+
+  const rawUserId =
     typeof data.user_id === 'string'
       ? data.user_id
       : typeof data.posterId === 'string'
@@ -31,10 +33,13 @@ const mapPost = (
         : typeof data.poster_id === 'string'
           ? data.poster_id
           : null
+  const userId =
+    rawUserId && rawUserId.length > 0 ? await decryptUserId(rawUserId) : null
+  const text = typeof data.text === 'string' ? await decryptText(data.text) : null
 
   return {
     id: docSnap.id,
-    text: typeof data.text === 'string' ? data.text : null,
+    text,
     posterName: typeof data.posterName === 'string' ? data.posterName : null,
     userId,
     createdAt: data.createdAt,
@@ -74,7 +79,7 @@ export function PostsSearchPage() {
           setNotice('該当する投稿が見つかりませんでした。')
           return
         }
-        setPosts([mapPost(postSnap)])
+        setPosts([await mapPost(postSnap)])
         return
       }
 
@@ -84,7 +89,7 @@ export function PostsSearchPage() {
         limit(limitCount),
       )
       const snapshot = await getDocs(postsQuery)
-      const list = snapshot.docs.map((docSnap) => mapPost(docSnap))
+      const list = await Promise.all(snapshot.docs.map((docSnap) => mapPost(docSnap)))
       const trimmedKeyword = keyword.trim().toLowerCase()
       const filtered = trimmedKeyword
         ? list.filter((post) => {

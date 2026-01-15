@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom'
 import { moderatePost } from '../api/functions'
 import { db } from '../firebase'
 import type { ModerationAction, Post, Report } from '../types'
+import { decryptText, decryptUserId } from '../utils/crypto'
 import { formatTimestamp } from '../utils/format'
 
 export function PostDetailPage() {
@@ -30,16 +31,19 @@ export function PostDetailPage() {
     const postSnap = await getDoc(doc(db, 'posts', postId))
     if (postSnap.exists()) {
       const data = postSnap.data() as Record<string, unknown>
-      const userId =
+      const rawUserId =
         typeof data.user_id === 'string'
           ? data.user_id
           : typeof data.posterId === 'string'
             ? data.posterId
             : null
+      const userId =
+        rawUserId && rawUserId.length > 0 ? await decryptUserId(rawUserId) : null
+      const text = typeof data.text === 'string' ? await decryptText(data.text) : null
       setPost({
         id: postSnap.id,
         ...(data as Omit<Post, 'id'>),
-        text: typeof data.text === 'string' ? data.text : null,
+        text,
         posterName: typeof data.posterName === 'string' ? data.posterName : null,
         userId,
         parent: typeof data.parent === 'string' ? data.parent : null,
