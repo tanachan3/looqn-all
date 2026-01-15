@@ -10,6 +10,7 @@ import { PostDetailPage } from './pages/PostDetail'
 import { PostsSearchPage } from './pages/PostsSearch'
 import { ReportsPage } from './pages/Reports'
 import { SettingsPage } from './pages/Settings'
+import { UsersPage } from './pages/Users'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/posts/:postId" element={<PostDetailPage />} />
             <Route path="/inquiries" element={<InquiriesPage />} />
             <Route path="/inquiries/:id" element={<InquiryDetailPage />} />
+            <Route path="/users" element={<UsersPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Route>
