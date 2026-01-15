@@ -29,7 +29,24 @@ export function PostDetailPage() {
     if (!postId) return
     const postSnap = await getDoc(doc(db, 'posts', postId))
     if (postSnap.exists()) {
-      setPost({ id: postSnap.id, ...(postSnap.data() as Omit<Post, 'id'>) })
+      const data = postSnap.data() as Record<string, unknown>
+      const userId =
+        typeof data.user_id === 'string'
+          ? data.user_id
+          : typeof data.posterId === 'string'
+            ? data.posterId
+            : null
+      setPost({
+        id: postSnap.id,
+        ...(data as Omit<Post, 'id'>),
+        text: typeof data.text === 'string' ? data.text : null,
+        posterName: typeof data.posterName === 'string' ? data.posterName : null,
+        userId,
+        parent: typeof data.parent === 'string' ? data.parent : null,
+        address: typeof data.address === 'string' ? data.address : null,
+        geohash: typeof data.geohash === 'string' ? data.geohash : null,
+        position: data.position ?? null,
+      })
     } else {
       setPost(null)
     }
@@ -125,6 +142,30 @@ export function PostDetailPage() {
             <div>
               <dt>作成日時</dt>
               <dd>{formatTimestamp(post.createdAt)}</dd>
+            </div>
+            <div>
+              <dt>投稿者</dt>
+              <dd>{post.posterName ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>投稿者ID</dt>
+              <dd>{post.userId ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>本文</dt>
+              <dd className="detail-text">{post.text ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>親投稿ID</dt>
+              <dd>{post.parent ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>住所</dt>
+              <dd>{post.address ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>ジオハッシュ</dt>
+              <dd>{post.geohash ?? '-'}</dd>
             </div>
             <div>
               <dt>最終通報</dt>

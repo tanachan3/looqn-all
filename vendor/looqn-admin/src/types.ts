@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore'
+import { GeoPoint, Timestamp } from 'firebase/firestore'
 
 export type PostStatus = 'active' | 'hidden' | 'deleted' | 'under_review'
 
@@ -13,6 +13,25 @@ export type Post = {
   expiresAt?: Timestamp
   reportCount?: number
   lastReportedAt?: Timestamp
+  text?: string | null
+  posterName?: string | null
+  userId?: string | null
+  parent?: string | null
+  address?: string | null
+  geohash?: string | null
+  position?: GeoPoint | null
+}
+
+export type PostRecord = {
+  id: string
+  text?: string | null
+  posterName?: string | null
+  userId?: string | null
+  createdAt?: Timestamp
+  parent?: string | null
+  address?: string | null
+  geohash?: string | null
+  position?: GeoPoint | null
 }
 
 export type Report = {
