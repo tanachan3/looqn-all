@@ -62,6 +62,7 @@ export function PostsSearchPage() {
   const [userIdQuery, setUserIdQuery] = useState('')
   const [keyword, setKeyword] = useState('')
   const [limitCount, setLimitCount] = useState(50)
+  const [collectionName, setCollectionName] = useState<'posts' | 'posts_purged'>('posts')
   const [posts, setPosts] = useState<PostRecord[]>([])
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
@@ -147,7 +148,7 @@ export function PostsSearchPage() {
     try {
       const trimmedId = postId.trim()
       if (trimmedId) {
-        const postSnap = await getDoc(doc(db, 'posts', trimmedId))
+        const postSnap = await getDoc(doc(db, collectionName, trimmedId))
         if (!postSnap.exists()) {
           setPosts([])
           setNotice('該当する投稿が見つかりませんでした。')
@@ -158,7 +159,7 @@ export function PostsSearchPage() {
       }
 
       const postsQuery = query(
-        collection(db, 'posts'),
+        collection(db, collectionName),
         orderBy('createdAt', 'desc'),
         limit(limitCount),
       )
@@ -246,6 +247,18 @@ export function PostsSearchPage() {
               onChange={(event) => setKeyword(event.target.value)}
               placeholder="本文・投稿者・住所など"
             />
+          </label>
+          <label>
+            対象コレクション
+            <select
+              value={collectionName}
+              onChange={(event) =>
+                setCollectionName(event.target.value as 'posts' | 'posts_purged')
+              }
+            >
+              <option value="posts">posts</option>
+              <option value="posts_purged">posts_purged</option>
+            </select>
           </label>
           <label>
             表示上限
@@ -338,7 +351,15 @@ export function PostsSearchPage() {
             {posts.map((post) => (
               <div key={post.id} className="table-row posts">
                 <span>
-                  <Link to={`/posts/${post.id}`}>{post.id}</Link>
+                  <Link
+                    to={
+                      collectionName === 'posts'
+                        ? `/posts/${post.id}`
+                        : `/posts/${post.id}?collection=posts_purged`
+                    }
+                  >
+                    {post.id}
+                  </Link>
                 </span>
                 <span>
                   <div>{post.posterName ?? '-'}</div>

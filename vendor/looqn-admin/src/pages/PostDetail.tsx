@@ -9,7 +9,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { moderatePost } from '../api/functions'
 import { db } from '../firebase'
 import type { ModerationAction, Post, Report } from '../types'
@@ -18,6 +18,9 @@ import { formatTimestamp } from '../utils/format'
 
 export function PostDetailPage() {
   const { postId } = useParams()
+  const location = useLocation()
+  const collectionParam = new URLSearchParams(location.search).get('collection')
+  const collectionName = collectionParam === 'posts_purged' ? 'posts_purged' : 'posts'
   const [post, setPost] = useState<Post | null>(null)
   const [reports, setReports] = useState<Report[]>([])
   const [actions, setActions] = useState<ModerationAction[]>([])
@@ -28,7 +31,7 @@ export function PostDetailPage() {
 
   const fetchPost = async () => {
     if (!postId) return
-    const postSnap = await getDoc(doc(db, 'posts', postId))
+    const postSnap = await getDoc(doc(db, collectionName, postId))
     if (postSnap.exists()) {
       const data = postSnap.data() as Record<string, unknown>
       const rawUserId =
@@ -100,7 +103,7 @@ export function PostDetailPage() {
     }
 
     load()
-  }, [postId])
+  }, [postId, collectionName])
 
   const handleModerate = async (action: 'hide' | 'restore' | 'delete') => {
     if (!postId) return
@@ -128,7 +131,9 @@ export function PostDetailPage() {
   return (
     <section>
       <h2>投稿詳細</h2>
-      <p className="muted">投稿の状態と通報履歴を確認します。</p>
+      <p className="muted">
+        投稿の状態と通報履歴を確認します。対象コレクション: {collectionName}
+      </p>
       {error && <p className="alert">{error}</p>}
       {message && <p className="success">{message}</p>}
       <div className="panel">
