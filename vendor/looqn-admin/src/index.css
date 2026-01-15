@@ -211,6 +211,15 @@ textarea {
   grid-template-columns: 160px 160px 2fr 1.2fr 160px 160px 120px;
 }
 
+.table-row.users {
+  grid-template-columns: 180px 160px 120px 1fr 160px;
+  align-items: center;
+}
+
+.table-row.users.with-actions {
+  grid-template-columns: 180px 160px 120px 1fr 160px 120px;
+}
+
 .sort-button {
   display: inline-flex;
   align-items: center;

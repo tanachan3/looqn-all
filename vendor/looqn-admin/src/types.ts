@@ -71,3 +71,11 @@ export type ModerationAction = {
   operatorEmail?: string | null
   createdAt?: Timestamp
 }
+
+export type UserRecord = {
+  id: string
+  displayName?: string | null
+  createdAt?: Timestamp
+  isNotificationEnabled?: boolean | null
+  location?: GeoPoint | null
+}
