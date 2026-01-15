@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "geomsg-4d728",
+    "prod": "geomsg-4d728",
+    "dev": "looqn-dev"
+  }
+}

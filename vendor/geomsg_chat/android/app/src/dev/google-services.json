@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "860475896267",
+    "project_id": "looqn-dev",
+    "storage_bucket": "looqn-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860475896267:android:041318d8e71349c3cc064e",
+        "android_client_info": {
+          "package_name": "net.looqn.app.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860475896267-vmb5fru4l0i1g0qdqcst82hvm6aetc88.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.looqn.app.dev",
+            "certificate_hash": "1d9452a37684bc7fe9a9829f11aade50de81e64e"
+          }
+        },
+        {
+          "client_id": "860475896267-ijpv3raghphan1k6vsqparu1t3tol51s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzA0CFE8oN8YUNsJz3i2RkqrUJoA7_ms8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860475896267-ijpv3raghphan1k6vsqparu1t3tol51s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "860475896267-vb7fur6trskjjd8ed7j8ng0t4lp09e98.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "net.looqn.app.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

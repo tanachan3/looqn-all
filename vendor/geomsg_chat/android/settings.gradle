@@ -1,0 +1,44 @@
+pluginManagement {
+    // Flutter SDK の場所を解決
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null : "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
+
+    // Flutter の Gradle タスクを取り込む
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    // ★ ここでプラグインのバージョンを固定して全体で統一
+    plugins {
+        id "com.android.application" version "8.6.1"
+        id "com.android.library" version "8.6.1"
+        id "org.jetbrains.kotlin.android" version "2.1.0"
+        // 使っていれば有効化（apply false 前提）
+        id "com.google.gms.google-services" version "4.4.2"
+        id "com.google.firebase.crashlytics" version "3.0.2"
+        // id "com.google.android.libraries.mapsplatform.secrets-gradle-plugin" version "2.0.1"
+    }
+}
+
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    // 各モジュール側（app/build.gradle 等）で適用するため apply false
+    id "com.android.application" apply false
+    id "com.android.library" apply false
+    id "org.jetbrains.kotlin.android" apply false
+    id "com.google.gms.google-services" apply false
+    id "com.google.firebase.crashlytics" apply false
+    // id "com.google.android.libraries.mapsplatform.secrets-gradle-plugin" apply false
+}
+
+// モジュール定義
+include ":app"
