@@ -25,6 +25,16 @@ export function PostDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
 
+  const formatPosition = (position?: Post['position']) => {
+    if (!position) return '-'
+    return `${position.latitude.toFixed(6)}, ${position.longitude.toFixed(6)}`
+  }
+
+  const formatReadStatus = (readStatus?: Post['readStatus']) => {
+    if (!readStatus || Object.keys(readStatus).length === 0) return '-'
+    return JSON.stringify(readStatus, null, 2)
+  }
+
   const fetchPost = async () => {
     if (!postId) return
     const postSnap = await getDoc(doc(db, 'posts', postId))
@@ -119,6 +129,14 @@ export function PostDetailPage() {
               <dd>{post.id}</dd>
             </div>
             <div>
+              <dt>投稿者ID</dt>
+              <dd>{post.user_id ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>投稿者名</dt>
+              <dd>{post.posterName ?? '-'}</dd>
+            </div>
+            <div>
               <dt>ステータス</dt>
               <dd>{post.status ?? 'unknown'}</dd>
             </div>
@@ -127,8 +145,48 @@ export function PostDetailPage() {
               <dd>{formatTimestamp(post.createdAt)}</dd>
             </div>
             <div>
+              <dt>有効期限</dt>
+              <dd>{formatTimestamp(post.expiresAt)}</dd>
+            </div>
+            <div>
               <dt>最終通報</dt>
               <dd>{formatTimestamp(post.lastReportedAt)}</dd>
+            </div>
+            <div>
+              <dt>通報件数</dt>
+              <dd>{post.reportCount ?? 0}</dd>
+            </div>
+            <div>
+              <dt>コメント投稿</dt>
+              <dd>{post.parent ? 'はい' : 'いいえ'}</dd>
+            </div>
+            <div>
+              <dt>親投稿ID</dt>
+              <dd>{post.parent ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>本文</dt>
+              <dd>
+                <pre className="pre-wrap">{post.text ?? '-'}</pre>
+              </dd>
+            </div>
+            <div>
+              <dt>住所</dt>
+              <dd>{post.address ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>位置情報</dt>
+              <dd>{formatPosition(post.position)}</dd>
+            </div>
+            <div>
+              <dt>GeoHash</dt>
+              <dd>{post.geohash ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>既読情報</dt>
+              <dd>
+                <pre className="pre-wrap">{formatReadStatus(post.readStatus)}</pre>
+              </dd>
             </div>
           </dl>
         ) : (

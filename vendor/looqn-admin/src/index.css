@@ -220,6 +220,12 @@ textarea {
   gap: 12px;
 }
 
+.pre-wrap {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
 .form {
   display: grid;
   gap: 12px;
