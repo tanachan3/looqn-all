@@ -207,6 +207,10 @@ textarea {
   align-items: start;
 }
 
+.table-row.posts.with-actions {
+  grid-template-columns: 160px 160px 2fr 1.2fr 160px 160px 120px;
+}
+
 .sort-button {
   display: inline-flex;
   align-items: center;

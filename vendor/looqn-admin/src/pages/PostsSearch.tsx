@@ -6,6 +6,7 @@ import {
   limit,
   orderBy,
   query,
+  writeBatch,
   type DocumentData,
   type DocumentSnapshot,
   type QueryDocumentSnapshot,
@@ -67,6 +68,7 @@ export function PostsSearchPage() {
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const [sortKey, setSortKey] = useState<
     'id' | 'poster' | 'text' | 'location' | 'createdAt' | 'parent'
   >('createdAt')
@@ -216,6 +218,36 @@ export function PostsSearchPage() {
     loadPosts()
   }
 
+  const handleDelete = async (post: PostRecord) => {
+    if (collectionName !== 'posts') return
+    const confirmMessage = '投稿を削除して posts_purged に移動します。よろしいですか？'
+    if (!window.confirm(confirmMessage)) return
+    try {
+      setError(null)
+      setNotice(null)
+      setDeletingId(post.id)
+      const sourceRef = doc(db, 'posts', post.id)
+      const postSnap = await getDoc(sourceRef)
+      if (!postSnap.exists()) {
+        setError('投稿が見つからないため削除できませんでした。')
+        return
+      }
+      const batch = writeBatch(db)
+      batch.set(doc(db, 'posts_purged', post.id), postSnap.data())
+      batch.delete(sourceRef)
+      await batch.commit()
+      setPosts((prev) => prev.filter((item) => item.id !== post.id))
+      setNotice('投稿を削除し、posts_purged に移動しました。')
+    } catch (err) {
+      console.error(err)
+      setError('投稿の削除に失敗しました。')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  const hasActions = collectionName === 'posts'
+
   return (
     <section>
       <h2>投稿検索</h2>
@@ -286,7 +318,7 @@ export function PostsSearchPage() {
           <p>読み込み中...</p>
         ) : (
           <div className="table">
-            <div className="table-row posts header">
+            <div className={`table-row posts header${hasActions ? ' with-actions' : ''}`}>
               <button
                 type="button"
                 className="sort-button"
@@ -347,9 +379,13 @@ export function PostsSearchPage() {
                   {sortKey === 'parent' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                 </span>
               </button>
+              {hasActions && <span>操作</span>}
             </div>
             {posts.map((post) => (
-              <div key={post.id} className="table-row posts">
+              <div
+                key={post.id}
+                className={`table-row posts${hasActions ? ' with-actions' : ''}`}
+              >
                 <span>
                   <Link
                     to={
@@ -372,6 +408,18 @@ export function PostsSearchPage() {
                 </span>
                 <span>{formatTimestamp(post.createdAt)}</span>
                 <span>{post.parent ?? '-'}</span>
+                {hasActions && (
+                  <span>
+                    <button
+                      type="button"
+                      className="button danger"
+                      disabled={deletingId === post.id}
+                      onClick={() => handleDelete(post)}
+                    >
+                      削除
+                    </button>
+                  </span>
+                )}
               </div>
             ))}
             {notice && <p className="muted">{notice}</p>}
