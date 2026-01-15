@@ -9,14 +9,18 @@ import {
   where,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { moderatePost } from '../api/functions'
 import { db } from '../firebase'
 import type { ModerationAction, Post, Report } from '../types'
+import { decryptText, decryptUserId } from '../utils/crypto'
 import { formatTimestamp } from '../utils/format'
 
 export function PostDetailPage() {
   const { postId } = useParams()
+  const location = useLocation()
+  const collectionParam = new URLSearchParams(location.search).get('collection')
+  const collectionName = collectionParam === 'posts_purged' ? 'posts_purged' : 'posts'
   const [post, setPost] = useState<Post | null>(null)
   const [reports, setReports] = useState<Report[]>([])
   const [actions, setActions] = useState<ModerationAction[]>([])
@@ -27,9 +31,29 @@ export function PostDetailPage() {
 
   const fetchPost = async () => {
     if (!postId) return
-    const postSnap = await getDoc(doc(db, 'posts', postId))
+    const postSnap = await getDoc(doc(db, collectionName, postId))
     if (postSnap.exists()) {
-      setPost({ id: postSnap.id, ...(postSnap.data() as Omit<Post, 'id'>) })
+      const data = postSnap.data() as Record<string, unknown>
+      const rawUserId =
+        typeof data.user_id === 'string'
+          ? data.user_id
+          : typeof data.posterId === 'string'
+            ? data.posterId
+            : null
+      const userId =
+        rawUserId && rawUserId.length > 0 ? await decryptUserId(rawUserId) : null
+      const text = typeof data.text === 'string' ? await decryptText(data.text) : null
+      setPost({
+        id: postSnap.id,
+        ...(data as Omit<Post, 'id'>),
+        text,
+        posterName: typeof data.posterName === 'string' ? data.posterName : null,
+        userId,
+        parent: typeof data.parent === 'string' ? data.parent : null,
+        address: typeof data.address === 'string' ? data.address : null,
+        geohash: typeof data.geohash === 'string' ? data.geohash : null,
+        position: data.position ?? null,
+      })
     } else {
       setPost(null)
     }
@@ -79,7 +103,7 @@ export function PostDetailPage() {
     }
 
     load()
-  }, [postId])
+  }, [postId, collectionName])
 
   const handleModerate = async (action: 'hide' | 'restore' | 'delete') => {
     if (!postId) return
@@ -107,7 +131,9 @@ export function PostDetailPage() {
   return (
     <section>
       <h2>投稿詳細</h2>
-      <p className="muted">投稿の状態と通報履歴を確認します。</p>
+      <p className="muted">
+        投稿の状態と通報履歴を確認します。対象コレクション: {collectionName}
+      </p>
       {error && <p className="alert">{error}</p>}
       {message && <p className="success">{message}</p>}
       <div className="panel">
@@ -125,6 +151,30 @@ export function PostDetailPage() {
             <div>
               <dt>作成日時</dt>
               <dd>{formatTimestamp(post.createdAt)}</dd>
+            </div>
+            <div>
+              <dt>投稿者</dt>
+              <dd>{post.posterName ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>投稿者ID</dt>
+              <dd>{post.userId ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>本文</dt>
+              <dd className="detail-text">{post.text ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>親投稿ID</dt>
+              <dd>{post.parent ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>住所</dt>
+              <dd>{post.address ?? '-'}</dd>
+            </div>
+            <div>
+              <dt>ジオハッシュ</dt>
+              <dd>{post.geohash ?? '-'}</dd>
             </div>
             <div>
               <dt>最終通報</dt>

@@ -7,6 +7,7 @@ import { InquiriesPage } from './pages/Inquiries'
 import { LoginPage } from './pages/Login'
 import { NotFoundPage } from './pages/NotFound'
 import { PostDetailPage } from './pages/PostDetail'
+import { PostsSearchPage } from './pages/PostsSearch'
 import { ReportsPage } from './pages/Reports'
 import { SettingsPage } from './pages/Settings'
 
@@ -19,6 +20,7 @@ function App() {
           <Route element={<Layout />}>
             <Route index element={<DashboardPage />} />
             <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/posts" element={<PostsSearchPage />} />
             <Route path="/posts/:postId" element={<PostDetailPage />} />
             <Route path="/inquiries" element={<InquiriesPage />} />
             <Route path="/inquiries/:id" element={<InquiryDetailPage />} />

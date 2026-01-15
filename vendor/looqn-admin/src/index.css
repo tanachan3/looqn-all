@@ -202,6 +202,43 @@ textarea {
   border-radius: 10px;
 }
 
+.table-row.posts {
+  grid-template-columns: 160px 160px 2fr 1.2fr 160px 160px;
+  align-items: start;
+}
+
+.sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.sort-button:hover {
+  color: #1d4ed8;
+}
+
+.sort-indicator {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.post-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.post-meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+
 .table-row.header {
   background: transparent;
   font-size: 12px;
@@ -218,6 +255,11 @@ textarea {
   display: grid;
   grid-template-columns: 120px 1fr;
   gap: 12px;
+}
+
+.detail-text {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .form {
