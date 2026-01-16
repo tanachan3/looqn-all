@@ -37,6 +37,14 @@ const mapPost = async (
   const userId =
     rawUserId && rawUserId.length > 0 ? await decryptUserId(rawUserId) : null
   const text = typeof data.text === 'string' ? await decryptText(data.text) : null
+  const rawParent =
+    typeof data.parent === 'string'
+      ? data.parent
+      : typeof data.parentId === 'string'
+        ? data.parentId
+        : typeof data.parent_id === 'string'
+          ? data.parent_id
+          : null
 
   return {
     id: docSnap.id,
@@ -44,7 +52,7 @@ const mapPost = async (
     posterName: typeof data.posterName === 'string' ? data.posterName : null,
     userId,
     createdAt: data.createdAt,
-    parent: typeof data.parent === 'string' ? data.parent : null,
+    parent: rawParent,
     address: typeof data.address === 'string' ? data.address : null,
     geohash: typeof data.geohash === 'string' ? data.geohash : null,
     position: data.position ?? null,
