@@ -31,6 +31,7 @@ const mapUser = (
     createdAt: data.createdAt,
     isNotificationEnabled:
       typeof data.isNotificationEnabled === 'boolean' ? data.isNotificationEnabled : null,
+    isPenalty: typeof data.is_penalty === 'boolean' ? data.is_penalty : null,
     location: data.location ?? null,
   }
 }
@@ -148,18 +149,31 @@ export function UsersPage() {
   }
 
   const handlePenalty = async (user: UserRecord) => {
-    const confirmMessage = 'ユーザーにペナルティを付与します。よろしいですか？'
+    const isPenalty = user.isPenalty === true
+    const confirmMessage = isPenalty
+      ? 'ペナルティを解除します。よろしいですか？'
+      : 'ユーザーにペナルティを付与します。よろしいですか？'
     if (!window.confirm(confirmMessage)) return
     try {
       setError(null)
       setNotice(null)
       setPenaltyId(user.id)
       const userRef = doc(db, 'users', user.id)
-      await updateDoc(userRef, { is_penalty: true })
-      setNotice('ユーザーにペナルティを付与しました。')
+      await updateDoc(userRef, { is_penalty: !isPenalty })
+      setNotice(isPenalty ? 'ペナルティを解除しました。' : 'ユーザーにペナルティを付与しました。')
+      setUsers((prev) =>
+        prev.map((item) =>
+          item.id === user.id
+            ? {
+                ...item,
+                isPenalty: !isPenalty,
+              }
+            : item,
+        ),
+      )
     } catch (err) {
       console.error(err)
-      setError('ペナルティの付与に失敗しました。')
+      setError(isPenalty ? 'ペナルティの解除に失敗しました。' : 'ペナルティの付与に失敗しました。')
     } finally {
       setPenaltyId(null)
     }
@@ -244,7 +258,7 @@ export function UsersPage() {
                       disabled={penaltyId === user.id}
                       onClick={() => handlePenalty(user)}
                     >
-                      ペナルティ
+                      {user.isPenalty ? 'ペナルティ解除' : 'ペナルティ'}
                     </button>
                     <button
                       type="button"
