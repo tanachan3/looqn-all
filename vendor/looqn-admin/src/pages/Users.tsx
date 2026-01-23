@@ -6,6 +6,7 @@ import {
   limit,
   orderBy,
   query,
+  updateDoc,
   where,
   writeBatch,
   type DocumentData,
@@ -50,6 +51,7 @@ export function UsersPage() {
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [penaltyId, setPenaltyId] = useState<string | null>(null)
 
   const loadUsers = async () => {
     setLoading(true)
@@ -145,6 +147,24 @@ export function UsersPage() {
     }
   }
 
+  const handlePenalty = async (user: UserRecord) => {
+    const confirmMessage = 'ユーザーにペナルティを付与します。よろしいですか？'
+    if (!window.confirm(confirmMessage)) return
+    try {
+      setError(null)
+      setNotice(null)
+      setPenaltyId(user.id)
+      const userRef = doc(db, 'users', user.id)
+      await updateDoc(userRef, { is_penalty: true })
+      setNotice('ユーザーにペナルティを付与しました。')
+    } catch (err) {
+      console.error(err)
+      setError('ペナルティの付与に失敗しました。')
+    } finally {
+      setPenaltyId(null)
+    }
+  }
+
   return (
     <section>
       <h2>ユーザー検索</h2>
@@ -217,14 +237,24 @@ export function UsersPage() {
                 <span>{formatLocation(user)}</span>
                 <span>{formatTimestamp(user.createdAt)}</span>
                 <span>
-                  <button
-                    type="button"
-                    className="button danger"
-                    disabled={deletingId === user.id}
-                    onClick={() => handleDelete(user)}
-                  >
-                    削除
-                  </button>
+                  <div className="actions">
+                    <button
+                      type="button"
+                      className="button"
+                      disabled={penaltyId === user.id}
+                      onClick={() => handlePenalty(user)}
+                    >
+                      ペナルティ
+                    </button>
+                    <button
+                      type="button"
+                      className="button danger"
+                      disabled={deletingId === user.id}
+                      onClick={() => handleDelete(user)}
+                    >
+                      削除
+                    </button>
+                  </div>
                 </span>
               </div>
             ))}
