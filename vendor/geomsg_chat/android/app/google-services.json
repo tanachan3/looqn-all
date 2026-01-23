@@ -1,0 +1,202 @@
+{
+  "project_info": {
+    "project_number": "756158976086",
+    "project_id": "geomsg-4d728",
+    "storage_bucket": "geomsg-4d728.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756158976086:android:1c20bbbc13f8cf984debf7",
+        "android_client_info": {
+          "package_name": "com.exam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756158976086-ijqlvabusetfp16v9m7mh85e0kt0se11.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.exam",
+            "certificate_hash": "e1003242cd7e759ef2238952173aef91451c0914"
+          }
+        },
+        {
+          "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxiLxvIFmzqm37xuYMAdu8UBfAR_oDTyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "756158976086-2u82qpdpleks7aq7q6762p257buu36ic.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.geomsgChat"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756158976086:android:af4f14c89e5ee9744debf7",
+        "android_client_info": {
+          "package_name": "com.example.geo_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxiLxvIFmzqm37xuYMAdu8UBfAR_oDTyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "756158976086-2u82qpdpleks7aq7q6762p257buu36ic.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.geomsgChat"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756158976086:android:dc3531d448234acf4debf7",
+        "android_client_info": {
+          "package_name": "com.example.geomsg_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756158976086-i5p6ph9k8ak3pr2s2qfbq2cvj3bh03q7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.geomsg_chat",
+            "certificate_hash": "31613f002a3826228073045d12687450b46908c4"
+          }
+        },
+        {
+          "client_id": "756158976086-s5frjsktbevgcf0h98po52vimrhb3kjt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.geomsg_chat",
+            "certificate_hash": "1d9452a37684bc7fe9a9829f11aade50de81e64e"
+          }
+        },
+        {
+          "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxiLxvIFmzqm37xuYMAdu8UBfAR_oDTyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "756158976086-2u82qpdpleks7aq7q6762p257buu36ic.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.geomsgChat"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756158976086:android:f896b537014ce53f4debf7",
+        "android_client_info": {
+          "package_name": "net.looqn.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756158976086-8lpc7cmecqv8179111hb5tpre12ke5gv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.looqn.app",
+            "certificate_hash": "16b77b1fe292bec6bb4d89496d18dc3674249441"
+          }
+        },
+        {
+          "client_id": "756158976086-9ls2v01kjj6ihm8v49i58j3dltk7ad6d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.looqn.app",
+            "certificate_hash": "bdefaee46caa834417a25177f04acb46e2716f59"
+          }
+        },
+        {
+          "client_id": "756158976086-ff6hg4f9c91mgqf4pdsrj6nosuictv4r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.looqn.app",
+            "certificate_hash": "1d9452a37684bc7fe9a9829f11aade50de81e64e"
+          }
+        },
+        {
+          "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxiLxvIFmzqm37xuYMAdu8UBfAR_oDTyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756158976086-pl63dtung35rag8juirfgdj0g1cqilun.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "756158976086-2u82qpdpleks7aq7q6762p257buu36ic.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.geomsgChat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
