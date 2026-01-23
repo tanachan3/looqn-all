@@ -1,0 +1,69 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "geomsg-4d728",
+                    "appId": "1:756158976086:android:f896b537014ce53f4debf7",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "geomsg-4d728",
+                    "appId": "1:756158976086:ios:69030a5373911e164debf7",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "macos": {
+                "default": {
+                    "projectId": "geomsg-4d728",
+                    "appId": "1:756158976086:ios:41878acd9bfa28084debf7",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "macos/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "geomsg-4d728",
+                    "configurations": {
+                        "android": "1:756158976086:android:dc3531d448234acf4debf7",
+                        "ios": "1:756158976086:ios:41878acd9bfa28084debf7",
+                        "macos": "1:756158976086:ios:41878acd9bfa28084debf7",
+                        "web": "1:756158976086:web:d309e32892d6f5b44debf7",
+                        "windows": "1:756158976086:web:942a1c854da40f7c4debf7"
+                    }
+                },
+                "lib/firebase_options_prod.dart": {
+                    "projectId": "geomsg-4d728",
+                    "configurations": {
+                        "android": "1:756158976086:android:f896b537014ce53f4debf7",
+                        "ios": "1:756158976086:ios:69030a5373911e164debf7",
+                        "macos": "1:756158976086:ios:41878acd9bfa28084debf7",
+                        "web": "1:756158976086:web:d309e32892d6f5b44debf7",
+                        "windows": "1:756158976086:web:942a1c854da40f7c4debf7"
+                    }
+                }
+            }
+        }
+    },
+    "hosting": {
+        "public": "public",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ]
+    },
+    "functions": {
+        "source": "functions",
+        "runtime": "nodejs20",
+        "region": "us-central1"
+    },
+    "emulators": {
+        "functions": {
+            "port": 5001
+        }
+    }
+}
