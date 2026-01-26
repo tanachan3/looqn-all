@@ -6,6 +6,7 @@ import {
   limit,
   orderBy,
   query,
+  updateDoc,
   where,
   writeBatch,
   type DocumentData,
@@ -30,6 +31,7 @@ const mapUser = (
     createdAt: data.createdAt,
     isNotificationEnabled:
       typeof data.isNotificationEnabled === 'boolean' ? data.isNotificationEnabled : null,
+    isPenalty: typeof data.is_penalty === 'boolean' ? data.is_penalty : null,
     location: data.location ?? null,
   }
 }
@@ -50,6 +52,7 @@ export function UsersPage() {
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [penaltyId, setPenaltyId] = useState<string | null>(null)
 
   const loadUsers = async () => {
     setLoading(true)
@@ -145,6 +148,37 @@ export function UsersPage() {
     }
   }
 
+  const handlePenalty = async (user: UserRecord) => {
+    const isPenalty = user.isPenalty === true
+    const confirmMessage = isPenalty
+      ? 'ペナルティを解除します。よろしいですか？'
+      : 'ユーザーにペナルティを付与します。よろしいですか？'
+    if (!window.confirm(confirmMessage)) return
+    try {
+      setError(null)
+      setNotice(null)
+      setPenaltyId(user.id)
+      const userRef = doc(db, 'users', user.id)
+      await updateDoc(userRef, { is_penalty: !isPenalty })
+      setNotice(isPenalty ? 'ペナルティを解除しました。' : 'ユーザーにペナルティを付与しました。')
+      setUsers((prev) =>
+        prev.map((item) =>
+          item.id === user.id
+            ? {
+                ...item,
+                isPenalty: !isPenalty,
+              }
+            : item,
+        ),
+      )
+    } catch (err) {
+      console.error(err)
+      setError(isPenalty ? 'ペナルティの解除に失敗しました。' : 'ペナルティの付与に失敗しました。')
+    } finally {
+      setPenaltyId(null)
+    }
+  }
+
   return (
     <section>
       <h2>ユーザー検索</h2>
@@ -217,14 +251,24 @@ export function UsersPage() {
                 <span>{formatLocation(user)}</span>
                 <span>{formatTimestamp(user.createdAt)}</span>
                 <span>
-                  <button
-                    type="button"
-                    className="button danger"
-                    disabled={deletingId === user.id}
-                    onClick={() => handleDelete(user)}
-                  >
-                    削除
-                  </button>
+                  <div className="actions">
+                    <button
+                      type="button"
+                      className="button"
+                      disabled={penaltyId === user.id}
+                      onClick={() => handlePenalty(user)}
+                    >
+                      {user.isPenalty ? 'ペナルティ解除' : 'ペナルティ'}
+                    </button>
+                    <button
+                      type="button"
+                      className="button danger"
+                      disabled={deletingId === user.id}
+                      onClick={() => handleDelete(user)}
+                    >
+                      削除
+                    </button>
+                  </div>
                 </span>
               </div>
             ))}

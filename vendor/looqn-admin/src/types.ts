@@ -78,5 +78,6 @@ export type UserRecord = {
   displayName?: string | null
   createdAt?: Timestamp
   isNotificationEnabled?: boolean | null
+  isPenalty?: boolean | null
   location?: GeoPoint | null
 }
