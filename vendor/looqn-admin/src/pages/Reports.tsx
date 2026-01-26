@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, limit, orderBy, query, updateDoc } from 'firebase/firestore'
+import { Timestamp, collection, doc, getDocs, limit, query, updateDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { db } from '../firebase'
@@ -11,16 +11,59 @@ export function ReportsPage() {
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState<Record<string, boolean>>({})
 
+  const normalizeReport = (docId: string, data: Record<string, unknown>): Report => {
+    const postId =
+      typeof data.postId === 'string'
+        ? data.postId
+        : typeof data.reportedPostId === 'string'
+          ? data.reportedPostId
+          : ''
+    const reasonCode =
+      typeof data.reasonCode === 'string'
+        ? data.reasonCode
+        : typeof data.reason === 'string'
+          ? data.reason
+          : undefined
+    const createdAt =
+      data.createdAt instanceof Timestamp
+        ? data.createdAt
+        : data.timestamp instanceof Timestamp
+          ? data.timestamp
+          : undefined
+    const reporterUid =
+      typeof data.reporterUid === 'string'
+        ? data.reporterUid
+        : typeof data.reportedBy === 'string'
+          ? data.reportedBy
+          : null
+    const state = typeof data.state === 'string' ? data.state : 'open'
+    const processed = typeof data.processed === 'boolean' ? data.processed : null
+
+    return {
+      id: docId,
+      postId,
+      reasonCode,
+      reporterUid,
+      createdAt,
+      state,
+      processed,
+    }
+  }
+
+  const sortByCreatedAt = (items: Report[]) =>
+    items.sort((a, b) => {
+      const aTime = a.createdAt ? a.createdAt.toMillis() : 0
+      const bTime = b.createdAt ? b.createdAt.toMillis() : 0
+      return bTime - aTime
+    })
+
   useEffect(() => {
     const load = async () => {
       try {
-        const reportsQuery = query(collection(db, 'reports'), orderBy('createdAt', 'desc'), limit(100))
+        const reportsQuery = query(collection(db, 'reports'), limit(200))
         const snapshot = await getDocs(reportsQuery)
-        const nextReports = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Report, 'id'>),
-        }))
-        setReports(nextReports)
+        const nextReports = snapshot.docs.map((doc) => normalizeReport(doc.id, doc.data()))
+        setReports(sortByCreatedAt(nextReports))
       } catch (err) {
         console.error(err)
         setError('通報一覧の取得に失敗しました。')
@@ -68,7 +111,11 @@ export function ReportsPage() {
           {reports.map((report) => (
             <div key={report.id} className="table-row">
               <span>
-                <Link to={`/posts/${report.postId}`}>{report.postId}</Link>
+                {report.postId ? (
+                  <Link to={`/posts/${report.postId}`}>{report.postId}</Link>
+                ) : (
+                  '-'
+                )}
               </span>
               <span>{report.reasonCode ?? '-'}</span>
               <span>{formatTimestamp(report.createdAt)}</span>

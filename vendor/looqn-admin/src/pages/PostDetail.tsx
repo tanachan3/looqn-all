@@ -1,13 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore'
+import { Timestamp, collection, doc, getDoc, getDocs, limit, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { moderatePost } from '../api/functions'
@@ -69,18 +60,65 @@ export function PostDetailPage() {
 
   const fetchReports = async () => {
     if (!postId) return
-    const reportQuery = query(
+    const reportQuery = query(collection(db, 'reports'), where('postId', '==', postId), limit(50))
+    const legacyReportQuery = query(
       collection(db, 'reports'),
-      where('postId', '==', postId),
-      orderBy('createdAt', 'desc'),
+      where('reportedPostId', '==', postId),
       limit(50),
     )
-    const reportSnap = await getDocs(reportQuery)
-    const list = reportSnap.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...(docSnap.data() as Omit<Report, 'id'>),
-    }))
-    setReports(list)
+    const [reportSnap, legacyReportSnap] = await Promise.all([
+      getDocs(reportQuery),
+      getDocs(legacyReportQuery),
+    ])
+    const normalizeReport = (docId: string, data: Record<string, unknown>): Report => {
+      const postIdValue =
+        typeof data.postId === 'string'
+          ? data.postId
+          : typeof data.reportedPostId === 'string'
+            ? data.reportedPostId
+            : ''
+      const reasonCode =
+        typeof data.reasonCode === 'string'
+          ? data.reasonCode
+          : typeof data.reason === 'string'
+            ? data.reason
+            : undefined
+      const createdAt =
+        data.createdAt instanceof Timestamp
+          ? data.createdAt
+          : data.timestamp instanceof Timestamp
+            ? data.timestamp
+            : undefined
+      const reporterUid =
+        typeof data.reporterUid === 'string'
+          ? data.reporterUid
+          : typeof data.reportedBy === 'string'
+            ? data.reportedBy
+            : null
+      const state = typeof data.state === 'string' ? data.state : 'open'
+      const processed = typeof data.processed === 'boolean' ? data.processed : null
+
+      return {
+        id: docId,
+        postId: postIdValue,
+        reasonCode,
+        reporterUid,
+        createdAt,
+        state,
+        processed,
+      }
+    }
+    const list = [
+      ...reportSnap.docs.map((docSnap) => normalizeReport(docSnap.id, docSnap.data())),
+      ...legacyReportSnap.docs.map((docSnap) => normalizeReport(docSnap.id, docSnap.data())),
+    ]
+    const uniqueById = new Map(list.map((report) => [report.id, report]))
+    const sorted = Array.from(uniqueById.values()).sort((a, b) => {
+      const aTime = a.createdAt ? a.createdAt.toMillis() : 0
+      const bTime = b.createdAt ? b.createdAt.toMillis() : 0
+      return bTime - aTime
+    })
+    setReports(sorted)
   }
 
   const fetchActions = async () => {
