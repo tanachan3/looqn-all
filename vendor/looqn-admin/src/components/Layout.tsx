@@ -26,7 +26,7 @@ export function Layout() {
           <NavLink to="/" end>
             ダッシュボード
           </NavLink>
-          <NavLink to="/reports">通報キュー</NavLink>
+          <NavLink to="/reports">通報一覧</NavLink>
           <NavLink to="/posts">投稿検索</NavLink>
           <NavLink to="/users">ユーザー</NavLink>
           <NavLink to="/inquiries">問い合わせ</NavLink>
