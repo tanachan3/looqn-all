@@ -41,6 +41,7 @@ export type Report = {
   reporterUid?: string | null
   createdAt?: Timestamp
   state?: ReportState
+  processed?: boolean | null
 }
 
 export type Inquiry = {
