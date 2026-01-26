@@ -140,6 +140,12 @@ textarea {
   border: 1px solid #475569;
 }
 
+.button.outline {
+  background: #ffffff;
+  border: 1px solid #cbd5f5;
+  color: #1f2937;
+}
+
 .button.danger {
   background: #dc2626;
 }
@@ -200,6 +206,11 @@ textarea {
   padding: 12px;
   background: #f8fafc;
   border-radius: 10px;
+}
+
+.table-row.reports {
+  grid-template-columns: 180px 1fr 180px 120px 120px;
+  align-items: center;
 }
 
 .table-row.posts {

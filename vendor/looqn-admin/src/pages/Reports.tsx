@@ -58,7 +58,7 @@ export function ReportsPage() {
         <p>読み込み中...</p>
       ) : (
         <div className="table">
-          <div className="table-row header">
+          <div className="table-row header reports">
             <span>投稿ID</span>
             <span>理由</span>
             <span>通報日時</span>
@@ -66,7 +66,7 @@ export function ReportsPage() {
             <span>処理済み</span>
           </div>
           {reports.map((report) => (
-            <div key={report.id} className="table-row">
+            <div key={report.id} className="table-row reports">
               <span>
                 <Link to={`/posts/${report.postId}`}>{report.postId}</Link>
               </span>
@@ -75,7 +75,7 @@ export function ReportsPage() {
               <span>{report.state ?? 'open'}</span>
               <span>
                 <button
-                  className="button ghost"
+                  className="button outline"
                   type="button"
                   disabled={processing[report.id]}
                   onClick={() => handleToggleProcessed(report.id, !report.processed)}
