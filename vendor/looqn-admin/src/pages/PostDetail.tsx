@@ -1,4 +1,15 @@
-import { Timestamp, collection, doc, getDoc, getDocs, limit, query, where } from 'firebase/firestore'
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+  writeBatch,
+} from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { moderatePost } from '../api/functions'
@@ -151,7 +162,7 @@ export function PostDetailPage() {
     load()
   }, [postId, collectionName])
 
-  const handleModerate = async (action: 'hide' | 'restore' | 'delete') => {
+  const handleModerate = async (action: 'hide' | 'restore') => {
     if (!postId) return
     try {
       setError(null)
@@ -167,6 +178,31 @@ export function PostDetailPage() {
     } catch (err) {
       console.error(err)
       setError('操作に失敗しました。')
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!postId || collectionName !== 'posts') return
+    const confirmMessage = '投稿を削除して posts_purged に移動します。よろしいですか？'
+    if (!window.confirm(confirmMessage)) return
+    try {
+      setError(null)
+      setMessage(null)
+      const sourceRef = doc(db, 'posts', postId)
+      const postSnap = await getDoc(sourceRef)
+      if (!postSnap.exists()) {
+        setError('投稿が見つからないため削除できませんでした。')
+        return
+      }
+      const batch = writeBatch(db)
+      batch.set(doc(db, 'posts_purged', postId), postSnap.data())
+      batch.delete(sourceRef)
+      await batch.commit()
+      setPost(null)
+      setMessage('投稿を削除し、posts_purged に移動しました。')
+    } catch (err) {
+      console.error(err)
+      setError('投稿の削除に失敗しました。')
     }
   }
 
@@ -251,7 +287,7 @@ export function PostDetailPage() {
           <button className="button" onClick={() => handleModerate('restore')}>
             復帰
           </button>
-          <button className="button danger" onClick={() => handleModerate('delete')}>
+          <button className="button danger" onClick={handleDelete} disabled={collectionName !== 'posts'}>
             削除
           </button>
         </div>
